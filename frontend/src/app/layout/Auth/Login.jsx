@@ -3,8 +3,15 @@ import Swal from "sweetalert2";
 import { useNavigate, Link } from "react-router-dom";
 import { LOGIN_API } from "../../Service/Auth/Auth";
 
+
+
 const Login = () => {
+
+
+
   const navigate = useNavigate();
+
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -43,30 +50,13 @@ const Login = () => {
       const { Role } = response.data;
 
       if (response.status) {
-        if (Role === "USER") {
-          Swal.fire({
-            icon: "error",
-            title: "Login failed",
-            text: "User Can't Login On WebPage!",
-          });
-          return;
-        }
-
         Swal.fire({
           icon: "success",
           title: "Login successful",
           text: "You have successfully logged in!",
           timer: 1500,
           showConfirmButton: false,
-        }).then(() => {
-          if (Role === "SUPERADMIN") {
-            navigate("/superadmin/dashboard");
-          } else if (Role === "ADMIN") {
-            navigate("/admin/dashboard");
-          } else if (Role === "EMPLOYE") {
-            navigate("/employee/dashboard");
-          }
-        });
+        })
       } else {
         Swal.fire({
           icon: "error",

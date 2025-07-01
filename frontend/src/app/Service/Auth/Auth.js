@@ -2,6 +2,9 @@ import axios from "axios";
 
 // import Files
 import * as Config from "../../utils/Config";
+axios.defaults.withCredentials = true;
+
+
 
 // LOGIN-USER
 export async function LOGIN_API(data, token) {

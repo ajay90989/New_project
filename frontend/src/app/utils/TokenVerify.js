@@ -8,7 +8,7 @@ function getTokenFromCookies() {
         .find(row => row.startsWith('token='))
         ?.split('=')[1];
 
-
+    console.log("Token from cookies:", token);
 
     return token || null;
 }
@@ -25,4 +25,8 @@ export function getUserFromToken() {
 
         return null;
     }
+}
+
+export function token() {
+    getTokenFromCookies()
 }

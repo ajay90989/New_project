@@ -14,7 +14,7 @@ const cookieParser = require("cookie-parser");
 const server = http.createServer(app);
 
 const corsOpts = {
-    origin: ["http://localhost:3001", "*"],
+    origin: ["http://localhost:3000", "*"],
     credentials: true,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization", "x-access-token"],
