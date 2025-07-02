@@ -59,7 +59,7 @@ class Auth {
             );
 
             res.cookie("token", token, {
-                httpOnly: true,
+                httpOnly: false,
                 secure: false,
                 sameSite: "Lax",
                 maxAge: 12 * 60 * 60 * 1000,

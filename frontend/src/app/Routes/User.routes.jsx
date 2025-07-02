@@ -6,9 +6,10 @@ import Sidebar from '../component/Sidebar';
 
 
 const User = () => {
+    
     return (
         <div id="main-wrapper" className="wallet-open show">
-            <Header />
+            {/* <Header /> */}
             <Sidebar />
             <div className="content-body" style={{ minHeight: '80vh' }}>
                 <Routes>

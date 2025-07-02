@@ -1,30 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getUserFromToken } from "../../app/utils/TokenVerify";
-
-
+// import { getUserFromToken } from "../../utils/TokenVerify";
 
 const Header = () => {
-
   const location = useLocation();
-
-  const TokenData = getUserFromToken();
-
+  const TokenData = ""; // Replace with getUserFromToken();
   const user_role = TokenData?.Role?.toUpperCase();
   const user_id = TokenData?.user_id;
   const exp = TokenData?.exp;
 
-  const [isActive, setIsActive] = useState(false);
-  const [notification, setNotification] = useState([]);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-  const [logo, setLogo] = useState("");
+  const [notification, setNotification] = useState([]);
+  const [logo, setLogo] = useState("/assets/images/logo-light.png");
 
-  // Hamburger toggle
-  const toggleHamburger = () => {
-    setIsActive(!isActive);
-  };
-
-  // Theme toggle
+  // Theme Toggle
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -32,18 +21,17 @@ const Header = () => {
     document.body.setAttribute("data-theme", newTheme);
   };
 
-  // Set logo based on theme
+  // Logo Update
   useEffect(() => {
-    if (theme === "dark") {
-      setLogo("/assets/images/logo-dark.png");
-    } else {
-      setLogo("/assets/images/logo-light.png");
-    }
+    setLogo(
+      theme === "dark"
+        ? "/assets/images/logo-dark.png"
+        : "/assets/images/logo-light.png"
+    );
   }, [theme]);
 
-  // Optional: Sample notification
+  // Sample Notification
   useEffect(() => {
-    // Replace with real API call if needed
     setNotification([
       {
         id: 1,
@@ -60,16 +48,10 @@ const Header = () => {
     ]);
   }, []);
 
-  // Format date/time
-  const fDateTime = (date) => {
-    const d = new Date(date);
-    return d.toLocaleString();
-  };
+  const fDateTime = (date) => new Date(date).toLocaleString();
 
-  // Get current path for title
   const pathSegments = location.pathname.split("/");
-  const formattedSegment =
-    pathSegments[pathSegments.length - 1]?.replace(/-/g, "").toLowerCase();
+  const formattedSegment = pathSegments[pathSegments.length - 1]?.toLowerCase();
 
   const pageTitles = {
     admin: "Add Admin",
@@ -92,177 +74,141 @@ const Header = () => {
     "Dashboard";
 
   return (
-    <div>
+    <header>
+      {/* Top Banner */}
       <div
-        className="header-banner"
-        style={{ backgroundImage: "url(/assets/images/bg-1.png)" }}
+        className="py-2"
+        style={{
+          backgroundImage: "url(/assets/images/bg-1.png)",
+          backgroundSize: "cover",
+        }}
       ></div>
 
-      <div className="nav-header">
-        <a href="/" className="">
-          <img src={logo} width={"250px"} height={"83px"} alt="" className="w-100" />
-          <div className="brand-title"></div>
-        </a>
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+        <Link className="navbar-brand" to="/">
+          <img src={logo} alt="Logo" height="50" />
+        </Link>
 
-        <div className="nav-control">
-          <div
-            className={`hamburger ${isActive ? "is-active" : ""}`}
-            onClick={toggleHamburger}
-          >
-            <span className="line" />
-            <span className="line" />
-            <span className="line" />
-          </div>
-        </div>
-      </div>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-      <div className="header home">
-        <div className="header-content">
-          <nav className="navbar navbar-expand">
-            <div className="collapse navbar-collapse justify-content-between">
-              <div className="header-left"></div>
+        <div className="collapse navbar-collapse justify-content-end" id="navbarContent">
+          <ul className="navbar-nav align-items-center gap-3">
 
-              <ul className="navbar-nav header-right">
-                {/* Theme Toggle */}
-                <li className="nav-item dropdown notification_dropdown">
-                  <a className="nav-link dz-theme-mode" onClick={toggleTheme}>
-                    {theme.includes("light") ? (
-                      <i className="fas fa-sun" style={{ color: "#ffff" }} />
-                    ) : (
-                      <i className="fas fa-moon" style={{ color: "#ffff" }} />
-                    )}
-                  </a>
-                </li>
+            {/* Theme Toggle */}
+            <li className="nav-item">
+              <button className="btn btn-sm btn-light" onClick={toggleTheme}>
+                {theme === "light" ? (
+                  <i className="fas fa-sun text-warning"></i>
+                ) : (
+                  <i className="fas fa-moon text-dark"></i>
+                )}
+              </button>
+            </li>
 
-                {/* Notifications */}
-                {user_role === "ADMIN" && (
-                  <li className="nav-item dropdown notification_dropdown">
-                    <a
-                      href="#"
-                      className="nav-link"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <i className="fa fa-bell" style={{ color: "white" }} />
-                    </a>
-                    <div className="dropdown-menu dropdown-menu-end of-visible">
-                      <div
-                        id="DZ_W_Notification3"
-                        className="widget-media dlab-scroll p-3"
-                        style={{ maxHeight: 380, overflowY: "auto" }}
-                      >
-                        <ul className="timeline">
-                          {notification.map((item) => (
-                            <li key={item.id}>
-                              <div className="timeline-panel">
-                                <div className="media me-2">
-                                  <img
-                                    alt={`Avatar of ${item.UserName}`}
-                                    width={40}
-                                    src="/assets/images/avatar/1.png"
-                                  />
-                                </div>
-                                <div className="media-body">
-                                  <h6 className="mb-1">{item.message}</h6>
-                                  <small className="d-block">
-                                    {fDateTime(item.createdAt)}
-                                  </small>
-                                  <h6 className="mb-0 mt-2">{item.UserName}</h6>
-                                </div>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
+            {/* Notification */}
+            {user_role === "ADMIN" && (
+              <li className="nav-item dropdown">
+                <a
+                  href="#"
+                  className="nav-link dropdown-toggle"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i className="fa fa-bell text-white"></i>
+                </a>
+                <ul className="dropdown-menu dropdown-menu-end p-2" style={{ width: 300 }}>
+                  <h6 className="dropdown-header">Notifications</h6>
+                  {notification.map((item) => (
+                    <li key={item.id} className="mb-2">
+                      <div className="d-flex align-items-start">
+                        <img
+                          src="/assets/images/avatar/1.png"
+                          alt="avatar"
+                          className="rounded-circle me-2"
+                          width="40"
+                          height="40"
+                        />
+                        <div>
+                          <div>{item.message}</div>
+                          <small>{fDateTime(item.createdAt)}</small>
+                          <div className="fw-bold">{item.UserName}</div>
+                        </div>
                       </div>
-                      {notification.length !== 0 && (
-                        <a href="#" className="all-notification">
-                          See all notifications <i className="ti-arrow-end" />
-                        </a>
-                      )}
-                    </div>
+                    </li>
+                  ))}
+                  {notification.length > 0 && (
+                    <li className="dropdown-footer mt-2 text-center">
+                      <a href="#">View all</a>
+                    </li>
+                  )}
+                </ul>
+              </li>
+            )}
+
+            {/* Profile */}
+            <li className="nav-item dropdown">
+              <a
+                className="nav-link dropdown-toggle d-flex align-items-center"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+              >
+                <img
+                  src="/assets/images/avatar/1.png"
+                  className="rounded-circle"
+                  alt="User"
+                  width="40"
+                  height="40"
+                />
+              </a>
+              <ul className="dropdown-menu dropdown-menu-end">
+                {user_role === "ADMIN" && (
+                  <li>
+                    <Link className="dropdown-item" to="/admin/profile">
+                      <i className="fas fa-user me-2"></i>Profile
+                    </Link>
                   </li>
                 )}
 
-                {/* Profile Menu */}
-                <li>
-                  <div className="dropdown header-profile2">
-                    <a
-                      className="nav-link"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <div className="header-info2 d-flex align-items-center">
-                        <img src="/assets/images/avatar/1.png" alt="User Avatar" />
-                      </div>
-                    </a>
-                    <div className="dropdown-menu dropdown-menu-end">
-                      {user_role === "ADMIN" && (
-                        <Link
-                          to="/admin/profile"
-                          className="dropdown-item ai-icon"
-                        >
-                          <i
-                            className="fas fa-user"
-                            style={{ fontSize: "18px", color: "#000" }}
-                          />
-                          <span className="ms-2">Profile</span>
-                        </Link>
-                      )}
-
-                      {user_role === "SUPERADMIN" && (
-                        <>
-                          <Link
-                            to="/superadmin/bankdetails"
-                            className="dropdown-item ai-icon"
-                          >
-                            <i
-                              className="fas fa-university"
-                              style={{ fontSize: "18px", color: "#000" }}
-                            />
-                            <span className="ms-2">Bank Details</span>
-                          </Link>
-                          <Link
-                            to="/superadmin/settings"
-                            className="dropdown-item ai-icon"
-                          >
-                            <i
-                              className="fas fa-cogs"
-                              style={{ fontSize: "18px", color: "#000" }}
-                            />
-                            <span className="ms-2">Settings</span>
-                          </Link>
-                        </>
-                      )}
-
-                      <Link to="/login" className="dropdown-item ai-icon">
-                        <i
-                          className="fas fa-sign-out-alt"
-                          style={{ fontSize: "18px", color: "#fd5353" }}
-                        />
-                        <span className="ms-2 text-danger">Logout</span>
+                {user_role === "SUPERADMIN" && (
+                  <>
+                    <li>
+                      <Link className="dropdown-item" to="/superadmin/bankdetails">
+                        <i className="fas fa-university me-2"></i>Bank Details
                       </Link>
-                    </div>
-                  </div>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/superadmin/settings">
+                        <i className="fas fa-cogs me-2"></i>Settings
+                      </Link>
+                    </li>
+                  </>
+                )}
+
+                <li>
+                  <Link className="dropdown-item text-danger" to="/login">
+                    <i className="fas fa-sign-out-alt me-2"></i>Logout
+                  </Link>
                 </li>
               </ul>
-            </div>
-          </nav>
+            </li>
+          </ul>
         </div>
+      </nav>
 
-        {/* Page Title */}
-        <div className="page-titles">
-          <div className="sub-dz-head">
-            <div className="d-flex align-items-center dz-head-title">
-              <h2 className="text-white m-0">{title}</h2>
-            </div>
-          </div>
-        </div>
+      {/* Page Title Section */}
+      <div className="bg-light py-3 px-4 border-bottom">
+        <h4 className="mb-0 text-primary">{title}</h4>
       </div>
-
-
-    </div>
+    </header>
   );
 };
 

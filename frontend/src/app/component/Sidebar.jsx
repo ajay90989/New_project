@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { superadmin_header, admin_header, employee_header } from "./Sidebar_path";
+import {
+  superadmin_header,
+  admin_header,
+  employee_header,
+} from "./Sidebar_path";
 
 const Sidebar = () => {
   const location = useLocation();
   const [activeRoute, setActiveRoute] = useState(location.pathname);
-
 
   useEffect(() => {
     setActiveRoute(location.pathname);
@@ -22,7 +25,6 @@ const Sidebar = () => {
       case "position":
         return "fa fa-id-badge";
       case "transaction":
-        return "fa-solid fa-money-bill-transfer";
       case "license history":
         return "fa-solid fa-money-bill-transfer";
       case "withdrawal":
@@ -42,51 +44,58 @@ const Sidebar = () => {
       case "available positions":
         return "fa-solid fa-crosshairs";
       case "admin":
+      case "user detail":
         return "fa fa-user";
       case "currency setup":
         return "fa-regular fa-coin";
       case "sign up":
         return "fa-solid fa-right-to-bracket";
       case "brokerage":
-        return "fa fa-hand-holding-usd";
       case "bonus":
         return "fa fa-hand-holding-usd";
       case "research":
         return "fa-solid fa-money-bill-transfer";
       case "chat-box":
         return "fa-solid fa-comments";
-      case "user detail":
-        return "fa fa-user";
       default:
-        return "";
+        return "fa-solid fa-circle-dot";
     }
   };
 
-  // 🧭 Use any one you want (superadmin_header, admin_header, employee_header)
-  const routes = superadmin_header; // or admin_header or employee_header
+  const routes = superadmin_header;
 
   return (
-    <div className="dlabnav follow-info">
-      <div className="menu-scroll">
-        <div className="dlabnav-scroll mm-active">
-          <ul className="metismenu mm-show" id="menu">
-            {routes &&
-              routes.map((data) => (
-                <li
-                  key={data.id}
-                  className={`mm ${activeRoute === data.route ? "mm-active" : ""}`}
-                  onClick={() => setActiveRoute(data.route)}
-                >
-                  <Link to={data.route} aria-expanded="false">
-                    <i className={getIconClass(data.name)}></i>
-                    <span className="nav-text">{data.name}</span>
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </div>
+    <aside
+      className="bg-dark text-white vh-100 position-fixed"
+      style={{ width: "250px", overflowY: "auto", top: 0, left: 0 }}
+    >
+      <div className="p-3 border-bottom border-secondary text-center">
+        <h4 className="text-white mb-0">Admin Panel</h4>
       </div>
-    </div>
+
+      <ul className="nav flex-column p-2">
+        {routes &&
+          routes.map((data) => (
+            <li key={data.id} className="nav-item">
+              <Link
+                to={data.route}
+                onClick={() => setActiveRoute(data.route)}
+                className={`nav-link d-flex align-items-center px-3 py-2 rounded ${activeRoute === data.route
+                  ? "bg-primary text-white"
+                  : "text-white"
+                  }`}
+                style={{
+                  transition: "all 0.2s",
+                  fontWeight: "500",
+                }}
+              >
+                <i className={`${getIconClass(data.name)} me-3`}></i>
+                <span>{data.name}</span>
+              </Link>
+            </li>
+          ))}
+      </ul>
+    </aside>
   );
 };
 

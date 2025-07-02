@@ -11,7 +11,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -47,8 +47,6 @@ const Login = () => {
         password: password,
       });
 
-      const { Role } = response.data;
-
       if (response.status) {
         Swal.fire({
           icon: "success",
@@ -56,6 +54,8 @@ const Login = () => {
           text: "You have successfully logged in!",
           timer: 1500,
           showConfirmButton: false,
+        }).then(() => {
+          navigate("/user/dashboard");
         })
       } else {
         Swal.fire({
