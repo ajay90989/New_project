@@ -8,10 +8,8 @@ import { LOGIN_API } from "../../Service/Auth/Auth";
 const Login = () => {
 
 
-
   const navigate = useNavigate();
-
-
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
